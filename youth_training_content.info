@@ -1,0 +1,9 @@
+name = "Youth Training Content"
+description = "Integrates with Panels, Views, and Quicktabs to provide a Youth Training Content block for a page showing all youth training content on the site."
+package = Custom Modules
+dependencies[] = panels
+dependencies[] = views
+dependencies[] = quicktabs
+dependencies[] = recommended_content
+core = 6.x
+version = 6.x-1.0

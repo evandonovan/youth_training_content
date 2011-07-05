@@ -1,0 +1,4 @@
+<?php 
+function youth_training_content_install() {
+  drupal_set_message("The Youth Training Content module has been enabled. You may now view all youth training content at /youth-training-content.");
+}

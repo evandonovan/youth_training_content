@@ -1,0 +1,177 @@
+<?php
+// $Id$
+
+/** 
+* Implements hook_help()
+ */
+function youth_training_content_help($path, $arg) {
+  $output = '';
+  switch($path) {
+    case 'admin/help#youth_training_content':
+      $output = '<p>' . t('Creates a Quicktabs block programmatically for the All Youth Training Content panel.') . '</p>';
+      break;
+  }
+  return $output;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function youth_training_content_menu() {
+  $items = array();
+
+  $items['youth-training-content'] = array(
+    'page callback' => 'youth_training_content_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  ); 
+  return $items;
+}
+
+/**
+ * Page callback for /youth-training-content.
+ * Shows all youth training content (in Quicktabs).
+ */
+function youth_training_content_page() {
+  return theme('quicktabs', youth_training_content_quicktabs());
+}
+
+/**
+ * Implements hook_block().
+ */
+function youth_training_content_block($op = 'list', $delta = 0, $edit = array()) {
+  if ($op == 'list') {
+    $blocks['ytc_uywi'] = array(
+      'info' => t('Youth Training Content: UYWI'),
+      'weight' => 0, 
+      'status' => 0, 
+      'cache' => BLOCK_NO_CACHE,
+    );
+    $blocks['ytc_ccda'] = array(
+      'info' => t('Youth Training Content: CCDA'),
+      'weight' => 0, 
+      'status' => 0, 
+      'cache' => BLOCK_NO_CACHE,
+    );
+    $blocks['ytc_youth_wiki'] = array(
+      'info' => t('Youth Training Content: Youth Encyclopedia'),
+      'weight' => 0, 
+      'status' => 0, 
+      'cache' => BLOCK_NO_CACHE,
+    );
+    return $blocks;
+  }
+  elseif ($op == 'view') {
+    switch($delta) {
+      case 'ytc_uywi':
+        $block = array(
+         'content' => youth_training_content_uywi(),
+        );
+        break;
+      case 'ytc_ccda':
+        $block = array(
+         'content' => youth_training_content_ccda(),
+        );
+        break;
+      case 'ytc_youth_wiki':
+        $block = array(
+         'content' => youth_training_content_youth_wiki(),
+        );
+        break;
+    }
+    return $block;
+  }
+}
+
+/**
+ * Quicktabs block for the /youth-training-content page.
+ * Returns a quicktabs array with all youth training content.
+ */
+function youth_training_content_quicktabs() {
+  // Initialize an empty tabs array for the Quicktabs.
+  $tabs = array();
+  // Add the FASTEN tab.
+  $tabs[] = array(
+    'nid' => 9767,
+    'title' => 'FASTEN',
+    'weight' => -100,
+    'type' => 'node',
+  );
+  // Add the UYWI tab.
+  // This, and the other tabs must be defined as custom blocks or else they could not use AJAX.
+  $tabs[] = array(
+        'bid' => 'youth_training_content_delta_ytc_uywi',
+        'hide_title' => TRUE,
+        'title' => 'UYWI',
+        'weight' => -80,
+        'type' => 'block',
+  );
+  // Add the CCDA tab.
+  $tabs[] = array(
+        'bid' => 'youth_training_content_delta_ytc_ccda',
+        'hide_title' => TRUE,
+        'title' => 'CCDA',
+        'weight' => -60,
+        'type' => 'block',
+  );
+  // Add the TechMission Corps wiki tab.
+  $tabs[] = array(
+    'nid' => 1046,
+    'title' => 'TechMission Corps Wiki',
+    'weight' => -40,
+    'type' => 'node',
+  );
+  // Add the Urban Youth Encyclopedia wiki tab.
+  $tabs[] = array(
+        'bid' => 'youth_training_content_delta_ytc_youth_wiki',
+        'hide_title' => TRUE,
+        'title' => 'Urban Youth Ministry Encyclopedia',
+        'weight' => -20,
+        'type' => 'block',
+  );
+  $quicktabs['qtid'] = 'youthtrainingcontent';
+  $quicktabs['tabs'] = $tabs;
+  $quicktabs['style'] = 'Zen';
+  $quicktabs['ajax'] = TRUE;
+  return $quicktabs;
+}
+
+function youth_training_content_uywi() {
+ $content = '';
+ 
+ // the video tab will be 20 on the live site
+ $uywi_video = quicktabs_load(18);
+ $uywi_video_rendered = theme('quicktabs', $uywi_video);
+ $uywi_general_sessions = quicktabs_load(8);
+ $uywi_general_sessions_rendered = theme('quicktabs', $uywi_general_sessions);
+ $uywi_workshops = quicktabs_load(9);
+ $uywi_workshops_rendered = theme('quicktabs', $uywi_workshops);
+ 
+ $content .= '<div id="ytc-uywi-videos" class="ytc-section"><h2>Videos</h2>';
+ $content .= $uywi_videos_rendered . '</div>';
+ $content .= '<div id="ytc-uywi-general-sessions" class="ytc-section"><h2>General Sessions</h2>';
+ $content .= $uywi_general_sessions_rendered . '</div>';
+ $content .= '<div id="ytc-uywi-workshops" class="ytc-section"><h2>Workshops</h2>';
+ $content .= $uywi_workshops_rendered . '</div>';
+ return $content;
+}
+
+// @todo: Determine if there are Quicktabs for this yet.
+function youth_training_content_ccda() {
+ $content = '';
+ return $content;
+}
+
+// @todo: Determine which Quicktabs to use for this.
+function youth_training_content_youth_wiki() {
+ $content = '';
+ return $content;
+}
+
+function youth_training_content_preprocess_page(&$vars) {
+  // disable the sidebar on the youth training content page
+  if(arg(0) == 'youth-training-content') {
+    unset($vars['left']);
+  }
+  $vars['show_blocks'] = FALSE;
+}

@@ -21,6 +21,7 @@ function youth_training_content_menu() {
   $items = array();
 
   $items['youth-training-content'] = array(
+	  'title' => 'Youth Training Content',
     'page callback' => 'youth_training_content_page',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
@@ -89,19 +90,19 @@ function youth_training_content_quicktabs() {
   // Add the UYWI tab.
   // This, and the other tabs must be defined as custom blocks or else they could not use AJAX.
   $tabs[] = array(
-        'bid' => 'youth_training_content_delta_ytc_uywi',
-        'hide_title' => TRUE,
-        'title' => 'UYWI',
-        'weight' => -80,
-        'type' => 'block',
+    'bid' => 'youth_training_content_delta_ytc_uywi',
+    'hide_title' => TRUE,
+    'title' => 'UYWI',
+    'weight' => -80,
+    'type' => 'block',
   );
   // Add the CCDA tab.
   $tabs[] = array(
-        'bid' => 'youth_training_content_delta_ytc_ccda',
-        'hide_title' => TRUE,
-        'title' => 'CCDA',
-        'weight' => -60,
-        'type' => 'block',
+    'bid' => 'youth_training_content_delta_ytc_ccda',
+    'hide_title' => TRUE,
+    'title' => 'CCDA',
+    'weight' => -60,
+    'type' => 'block',
   );
   // Add the TechMission Corps wiki tab.
   $tabs[] = array(
@@ -156,12 +157,4 @@ function youth_training_content_ccda() {
  $content .= '<div id="ytc-ccda-workshops" class="ytc-section"><h2>Workshops</h2>';
  $content .= $ccda_workshops_rendered . '</div><div class="clearer"></div>';
  return $content;
-}
-
-function youth_training_content_preprocess_page(&$vars) {
-  // disable the sidebar on the youth training content page
-  if(arg(0) == 'youth-training-content') {
-    unset($vars['left']);
-		$vars['show_blocks'] = FALSE;
-  }
 }

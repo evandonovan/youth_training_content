@@ -20,8 +20,8 @@ function youth_training_content_help($path, $arg) {
 function youth_training_content_menu() {
   $items = array();
 
-  $items['youth-training-content'] = array(
-	  'title' => 'Youth Training Content',
+  $items['youth'] = array(
+	  'title' => 'Urban Ministry Training Library',
     'page callback' => 'youth_training_content_page',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
@@ -80,14 +80,7 @@ function youth_training_content_block($op = 'list', $delta = 0, $edit = array())
 function youth_training_content_quicktabs() {
   // Initialize an empty tabs array for the Quicktabs.
   $tabs = array();
-  // Add the FASTEN tab.
-  $tabs[] = array(
-    'nid' => 9767,
-    'title' => 'FASTEN',
-    'weight' => -100,
-    'type' => 'node',
-  );
-  // Add the UYWI tab.
+	// Add the UYWI tab.
   // This, and the other tabs must be defined as custom blocks or else they could not use AJAX.
   $tabs[] = array(
     'bid' => 'youth_training_content_delta_ytc_uywi',
@@ -104,19 +97,26 @@ function youth_training_content_quicktabs() {
     'weight' => -60,
     'type' => 'block',
   );
+  // Add the FASTEN tab.
+  $tabs[] = array(
+    'nid' => 9767,
+    'title' => 'FASTEN',
+    'weight' => -100,
+    'type' => 'node',
+  );
+  // Add the Urban Youth Ministry Encyclopedia tab.
+  $tabs[] = array(
+    'qtid' => 10,
+    'title' => 'Youth Encyclopedia',
+    'weight' => -20,
+    'type' => 'qtabs',
+  );
   // Add the TechMission Corps wiki tab.
   $tabs[] = array(
     'nid' => 1046,
     'title' => 'TechMission Corps Wiki',
     'weight' => -40,
     'type' => 'node',
-  );
-	// Add the Urban Youth Ministry Encyclopedia tab.
-  $tabs[] = array(
-    'qtid' => 10,
-    'title' => 'Urban Youth Ministry Encyclopedia',
-    'weight' => -20,
-    'type' => 'qtabs',
   );
   $quicktabs['qtid'] = 'youthtrainingcontent';
   $quicktabs['tabs'] = $tabs;
@@ -129,8 +129,8 @@ function youth_training_content_quicktabs() {
 function youth_training_content_uywi() {
  $content = '';
  
- $uywi_video = quicktabs_load(20);
- $uywi_video_rendered = theme('quicktabs', $uywi_video);
+ $uywi_videos = quicktabs_load(20);
+ $uywi_videos_rendered = theme('quicktabs', $uywi_videos);
  $uywi_general_sessions = quicktabs_load(8);
  $uywi_general_sessions_rendered = theme('quicktabs', $uywi_general_sessions);
  $uywi_workshops = quicktabs_load(9);

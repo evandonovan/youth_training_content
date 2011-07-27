@@ -21,7 +21,7 @@ function youth_training_content_menu() {
   $items = array();
 
   $items['youth'] = array(
-	  'title' => 'Urban Ministry Training Library',
+    'title' => 'Urban Youth Ministry Training Library',
     'page callback' => 'youth_training_content_page',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
@@ -30,7 +30,7 @@ function youth_training_content_menu() {
 }
 
 /**
- * Page callback for /youth-training-content.
+ * Page/block callback for /youth-training-content.
  * Shows all youth training content (in Quicktabs).
  */
 function youth_training_content_page() {
@@ -42,6 +42,12 @@ function youth_training_content_page() {
  */
 function youth_training_content_block($op = 'list', $delta = 0, $edit = array()) {
   if ($op == 'list') {
+    $blocks['ytc_quicktab'] = array(
+      'info' => t('Youth Training Content'),
+      'weight' => 0, 
+      'status' => 0, 
+      'cache' => BLOCK_NO_CACHE,
+    );
     $blocks['ytc_uywi'] = array(
       'info' => t('Youth Training Content: UYWI'),
       'weight' => 0, 
@@ -58,6 +64,12 @@ function youth_training_content_block($op = 'list', $delta = 0, $edit = array())
   }
   elseif ($op == 'view') {
     switch($delta) {
+      case 'ytc_quicktab':
+        $block = array(
+          'subject' => t('Urban Youth Ministry Training Library'),
+          'content' => youth_training_content_page(),
+        );
+        break;
       case 'ytc_uywi':
         $block = array(
          'content' => youth_training_content_uywi(),
@@ -80,7 +92,14 @@ function youth_training_content_block($op = 'list', $delta = 0, $edit = array())
 function youth_training_content_quicktabs() {
   // Initialize an empty tabs array for the Quicktabs.
   $tabs = array();
-	// Add the UYWI tab.
+  // Add the Toolkit tab (all resources from sites).
+  $tabs[] = array(
+    'qtid' => 21,
+    'title' => 'Toolkit',
+    'weight' => -100,
+    'type' => 'qtabs',
+  );
+  // Add the UYWI tab.
   // This, and the other tabs must be defined as custom blocks or else they could not use AJAX.
   $tabs[] = array(
     'bid' => 'youth_training_content_delta_ytc_uywi',
@@ -111,50 +130,43 @@ function youth_training_content_quicktabs() {
     'weight' => -20,
     'type' => 'qtabs',
   );
-  // Add the TechMission Corps wiki tab.
-  $tabs[] = array(
-    'nid' => 1046,
-    'title' => 'TechMission Corps Wiki',
-    'weight' => -40,
-    'type' => 'node',
-  );
   $quicktabs['qtid'] = 'youthtrainingcontent';
   $quicktabs['tabs'] = $tabs;
   $quicktabs['style'] = 'Zen';
-	// Change to TRUE if I can get the JS to load properly.
+  // Change to TRUE if I can get the JS to load properly.
   $quicktabs['ajax'] = FALSE;
   return $quicktabs;
 }
 
 function youth_training_content_uywi() {
- $content = '';
- 
- $uywi_videos = quicktabs_load(20);
- $uywi_videos_rendered = theme('quicktabs', $uywi_videos);
- $uywi_general_sessions = quicktabs_load(8);
- $uywi_general_sessions_rendered = theme('quicktabs', $uywi_general_sessions);
- $uywi_workshops = quicktabs_load(9);
- $uywi_workshops_rendered = theme('quicktabs', $uywi_workshops);
- 
- $content .= '<div id="ytc-uywi-videos" class="ytc-section"><h2>Videos</h2>';
- $content .= $uywi_videos_rendered . '</div><div class="clearer"></div>';
- $content .= '<div id="ytc-uywi-general-sessions" class="ytc-section"><h2>General Sessions</h2>';
- $content .= $uywi_general_sessions_rendered . '</div><div class="clearer"></div>';
- $content .= '<div id="ytc-uywi-workshops" class="ytc-section"><h2>Workshops</h2>';
- $content .= $uywi_workshops_rendered . '</div><div class="clearer"></div>';
- return $content;
+  $content = '';
+
+  $uywi_videos = quicktabs_load(20);
+  $uywi_videos_rendered = theme('quicktabs', $uywi_videos);
+  $uywi_general_sessions = quicktabs_load(8);
+  $uywi_general_sessions_rendered = theme('quicktabs', $uywi_general_sessions);
+  $uywi_workshops = quicktabs_load(9);
+  $uywi_workshops_rendered = theme('quicktabs', $uywi_workshops);
+
+  $content .= '<div id="ytc-uywi-videos" class="ytc-section"><h2>Videos</h2>';
+  $content .= $uywi_videos_rendered . '</div><div class="clearer"></div>';
+  $content .= '<div id="ytc-uywi-general-sessions" class="ytc-section"><h2>General Sessions</h2>';
+  $content .= $uywi_general_sessions_rendered . '</div><div class="clearer"></div>';
+  $content .= '<div id="ytc-uywi-workshops" class="ytc-section"><h2>Workshops</h2>';
+  $content .= $uywi_workshops_rendered . '</div><div class="clearer"></div>';
+  return $content;
 }
 
 function youth_training_content_ccda() {
- 
- $ccda_general_sessions = quicktabs_load(18);
- $ccda_general_sessions_rendered = theme('quicktabs', $ccda_general_sessions);
- $ccda_workshops = quicktabs_load(19);
- $ccda_workshops_rendered = theme('quicktabs', $ccda_workshops);
- 
- $content .= '<div id="ytc-ccda-general-sessions" class="ytc-section"><h2>General Sessions</h2>';
- $content .= $ccda_general_sessions_rendered . '</div><div class="clearer"></div>';
- $content .= '<div id="ytc-ccda-workshops" class="ytc-section"><h2>Workshops</h2>';
- $content .= $ccda_workshops_rendered . '</div><div class="clearer"></div>';
- return $content;
+
+  $ccda_general_sessions = quicktabs_load(18);
+  $ccda_general_sessions_rendered = theme('quicktabs', $ccda_general_sessions);
+  $ccda_workshops = quicktabs_load(19);
+  $ccda_workshops_rendered = theme('quicktabs', $ccda_workshops);
+
+  $content .= '<div id="ytc-ccda-general-sessions" class="ytc-section"><h2>General Sessions</h2>';
+  $content .= $ccda_general_sessions_rendered . '</div><div class="clearer"></div>';
+  $content .= '<div id="ytc-ccda-workshops" class="ytc-section"><h2>Workshops</h2>';
+  $content .= $ccda_workshops_rendered . '</div><div class="clearer"></div>';
+  return $content;
 }

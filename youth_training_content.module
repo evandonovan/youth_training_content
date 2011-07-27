@@ -109,6 +109,12 @@ function youth_training_content_block($op = 'list', $delta = 0, $edit = array())
       'status' => 0, 
       'cache' => BLOCK_NO_CACHE,
     );
+    $blocks['ytc_toolkit'] = array(
+      'info' => t('Youth Training Content: Toolkit'),
+      'weight' => 0, 
+      'status' => 0, 
+      'cache' => BLOCK_NO_CACHE,
+    );
     $blocks['ytc_uywi'] = array(
       'info' => t('Youth Training Content: UYWI'),
       'weight' => 0, 
@@ -117,6 +123,12 @@ function youth_training_content_block($op = 'list', $delta = 0, $edit = array())
     );
     $blocks['ytc_ccda'] = array(
       'info' => t('Youth Training Content: CCDA'),
+      'weight' => 0, 
+      'status' => 0, 
+      'cache' => BLOCK_NO_CACHE,
+    );
+    $blocks['ytc_encyclopedia'] = array(
+      'info' => t('Youth Training Content: Encyclopedia'),
       'weight' => 0, 
       'status' => 0, 
       'cache' => BLOCK_NO_CACHE,
@@ -131,6 +143,11 @@ function youth_training_content_block($op = 'list', $delta = 0, $edit = array())
           'content' => youth_training_content_page(),
         );
         break;
+      case 'ytc_toolkit':
+        $block = array(
+         'content' => youth_training_content_toolkit(),
+        );
+        break;
       case 'ytc_uywi':
         $block = array(
          'content' => youth_training_content_uywi(),
@@ -139,6 +156,11 @@ function youth_training_content_block($op = 'list', $delta = 0, $edit = array())
       case 'ytc_ccda':
         $block = array(
          'content' => youth_training_content_ccda(),
+        );
+        break;
+      case 'ytc_encyclopedia':
+        $block = array(
+         'content' => youth_training_content_wiki(),
         );
         break;
     }
@@ -155,10 +177,11 @@ function youth_training_content_quicktabs() {
   $tabs = array();
   // Add the Toolkit tab (all resources from sites).
   $tabs[] = array(
-    'qtid' => 21,
+    'bid' => 'youth_training_content_delta_ytc_toolkit',
+    'hide_title' => TRUE,
     'title' => 'Toolkit',
     'weight' => -100,
-    'type' => 'qtabs',
+    'type' => 'block',
   );
   // Add the UYWI tab.
   // This, and the other tabs must be defined as custom blocks or else they could not use AJAX.
@@ -186,10 +209,11 @@ function youth_training_content_quicktabs() {
   );
   // Add the Urban Youth Ministry Encyclopedia tab.
   $tabs[] = array(
-    'qtid' => 10,
+    'bid' => 'youth_training_content_delta_ytc_encyclopedia',
+    'hide_title' => TRUE,
     'title' => 'Youth Encyclopedia',
     'weight' => -20,
-    'type' => 'qtabs',
+    'type' => 'block',
   );
   $quicktabs['qtid'] = 'youthtrainingcontent';
   $quicktabs['tabs'] = $tabs;
@@ -199,6 +223,15 @@ function youth_training_content_quicktabs() {
   return $quicktabs;
 }
 
+function youth_training_content_toolkit() {
+  $content = '';
+
+  $toolkit = quicktabs_load(21);
+  $toolkit_rendered = theme('quicktabs', $toolkit);
+  $content .= '<div id="ytc-toolkit" class="ytc-section">' . $toolkit_rendered . '</div>';
+  return $content;
+}
+  
 function youth_training_content_uywi() {
   $content = '';
 
@@ -229,5 +262,14 @@ function youth_training_content_ccda() {
   $content .= $ccda_general_sessions_rendered . '</div><div class="clearer"></div>';
   $content .= '<div id="ytc-ccda-workshops" class="ytc-section"><h2>Workshops</h2>';
   $content .= $ccda_workshops_rendered . '</div><div class="clearer"></div>';
+  return $content;
+}
+
+function youth_training_content_wiki() {
+  $content = '';
+
+  $wiki = quicktabs_load(10);
+  $wiki_rendered = theme('quicktabs', $toolkit);
+  $content .= '<div id="ytc-wiki" class="ytc-section">' . $wiki_rendered . '</div>';
   return $content;
 }

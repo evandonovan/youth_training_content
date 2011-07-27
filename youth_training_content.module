@@ -25,16 +25,77 @@ function youth_training_content_menu() {
     'page callback' => 'youth_training_content_page',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
-  ); 
+  );
+  $items['youth/embed'] = array(
+    'title' => 'Embed the Urban Youth Ministry Training Library',
+    'page callback' => 'youth_training_content_embed_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );  
   return $items;
 }
 
 /**
- * Page/block callback for /youth-training-content.
+ * Page/block callback for /youth.
  * Shows all youth training content (in Quicktabs).
  */
 function youth_training_content_page() {
   return theme('quicktabs', youth_training_content_quicktabs());
+}
+
+/**
+ * Page callback for the /youth embed code.
+ */
+function youth_training_content_embed_page() {
+  $output = '';
+  $output .= '<p>To embed the entire <a href="/youth">youth training library</a> on your site,  you may use the following code:</p>';
+  $output .= drupal_get_form('ytc_embed_code_form');
+  return $output;
+}
+
+/**
+ * Form definition for the embed code page.
+*/
+function ytc_embed_code_form() {
+  $code = ytc_get_embed_code();
+
+  $form = array();
+  $form['ytc_embed_code'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Embed code'),
+    '#description' => t('Copy and paste this code into the &lt;body&gt; of your website\'s HTML'),
+    '#value' => $code,
+    '#maxlength' => FALSE,
+  );
+  return $form;
+}
+
+/**
+ * Generates the embed code itself.
+*/
+function ytc_get_embed_code() {
+  $embed_code = <<<EOF
+<!-- begin TechMission UrbanMinistry.org embed code for youth ministry library -->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://www.urbanministry.org/sites/all/modules/custom/remote_block/js/jquery.ba-postmessage.min.js"></script>
+<script type="text/javascript">
+$(function(){  
+  var if_height,  
+    src = 'http://www.urbanministry.org/remote-block/html/youth_training_content/ytc_quicktab#' + encodeURIComponent( document.location.href ),    
+    iframe = $( '<iframe " src="' + src + '" width="600" height="50" scrolling="no" frameborder="0"><\/iframe>' )
+      .appendTo( '#iframe' );  
+  $.receiveMessage(function(e){    
+    var h = Number( e.data.replace( /.*if_height=(\d+)(?:&|$)/, '$1' ) );    
+    if ( !isNaN( h ) && h > 0 && h !== if_height ) {
+      iframe.height( if_height = h );
+    }    
+  }, 'http://www.urbanministry.org' );
+});
+</script>
+<div id="iframe"></div>
+<!-- end embed code -->
+EOF;
+  return $embed_code;
 }
 
 /**

@@ -4,5 +4,6 @@ package = Custom Modules
 dependencies[] = panels
 dependencies[] = views
 dependencies[] = quicktabs
+dependencies[] = remote_block
 core = 6.x
 version = 6.x-1.0

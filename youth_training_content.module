@@ -269,7 +269,7 @@ function youth_training_content_wiki() {
   $content = '';
 
   $wiki = quicktabs_load(10);
-  $wiki_rendered = theme('quicktabs', $toolkit);
+  $wiki_rendered = theme('quicktabs', $wiki);
   $content .= '<div id="ytc-wiki" class="ytc-section">' . $wiki_rendered . '</div>';
   return $content;
 }

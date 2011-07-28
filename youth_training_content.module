@@ -40,7 +40,10 @@ function youth_training_content_menu() {
  * Shows all youth training content (in Quicktabs).
  */
 function youth_training_content_page() {
-  return theme('quicktabs', youth_training_content_quicktabs());
+  $output = '';
+  $output .= '<div id="ytc-embed-form">' . drupal_get_form('ytc_embed_code_form') . '</div>';
+  $output .= theme('quicktabs', youth_training_content_quicktabs());
+  return $output;
 }
 
 /**
@@ -61,6 +64,12 @@ function ytc_embed_code_form() {
 
   $form = array();
   $form['ytc_embed_code'] = array(
+    '#type' => 'fieldset', 
+    '#title' => t('Embed this page'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['ytc_embed_code']['code'] = array(
     '#type' => 'textarea',
     '#title' => t('Embed code'),
     '#description' => t('Copy and paste this code into the &lt;body&gt; of your website\'s HTML'),
@@ -77,19 +86,12 @@ function ytc_get_embed_code() {
   $embed_code = <<<EOF
 <!-- begin TechMission UrbanMinistry.org embed code for youth ministry library -->
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<script type="text/javascript" src="http://www.urbanministry.org/sites/all/modules/custom/remote_block/js/jquery.ba-postmessage.min.js"></script>
 <script type="text/javascript">
 $(function(){  
   var if_height,  
     src = 'http://www.urbanministry.org/remote-block/html/youth_training_content/ytc_quicktab#' + encodeURIComponent( document.location.href ),    
-    iframe = $( '<iframe " src="' + src + '" width="600" height="50" scrolling="no" frameborder="0"><\/iframe>' )
-      .appendTo( '#iframe' );  
-  $.receiveMessage(function(e){    
-    var h = Number( e.data.replace( /.*if_height=(\d+)(?:&|$)/, '$1' ) );    
-    if ( !isNaN( h ) && h > 0 && h !== if_height ) {
-      iframe.height( if_height = h );
-    }    
-  }, 'http://www.urbanministry.org' );
+    iframe = $( '<iframe " src="' + src + '" width="600" height="500" scrolling="yes" frameborder="0"><\/iframe>' )
+      .appendTo( '#iframe' ); 
 });
 </script>
 <div id="iframe"></div>
